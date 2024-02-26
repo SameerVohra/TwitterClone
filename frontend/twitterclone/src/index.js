@@ -6,7 +6,7 @@ import About from "./About.js";
 import Contact from "./Contact.js";
 import Posts from "./Posts";
 import Login from "./Login.js";
-
+import Counter from "./Counter";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -37,6 +37,11 @@ const router = createBrowserRouter([
   {
     path: "/Login",
     element: <Login></Login>,
+  },
+
+  {
+    path: "/counter",
+    element: <Counter></Counter>,
   },
 ]);
 
