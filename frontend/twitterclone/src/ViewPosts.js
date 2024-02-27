@@ -3,6 +3,7 @@ import axios from "axios";
 export default function ViewPosts() {
   const [apiData, setApiData] = useState([]);
   const [loading, isLoading] = useState(true);
+  const [apiError, setApiError] = useState(false);
   useEffect(() => {
     (async () => {
       try {
@@ -14,9 +15,12 @@ export default function ViewPosts() {
         setApiData(response.data);
         console.log(apiData);
         isLoading(false);
-      } catch (error) {}
+      } catch (error) {
+        setApiError(true);
+      }
     })();
   }, []);
+  if (apiError) return <h1>Something went wrong</h1>;
   if (loading) return <h1>LOADING.................</h1>;
   const result = apiData.map((data) => <h1 key={data.id}>{data.title}</h1>);
 
