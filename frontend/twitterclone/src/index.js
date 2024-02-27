@@ -7,6 +7,8 @@ import Contact from "./Contact.js";
 import Posts from "./Posts";
 import Login from "./Login.js";
 import Counter from "./Counter";
+import ViewPosts from "./ViewPosts.js";
+import axios from "axios";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,7 +33,7 @@ const router = createBrowserRouter([
 
   {
     path: "/posts",
-    element: <h1>All Posts</h1>,
+    element: <ViewPosts></ViewPosts>,
   },
 
   {
