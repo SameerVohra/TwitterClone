@@ -5,11 +5,15 @@ export default function Counter() {
   const [secondCount, setSecondCount] = useState(1);
   useEffect(() => {
     console.log("Component Mounted");
+    return function () {
+      console.log("Exit ...........");
+    };
   }, []);
 
   useEffect(() => {
     console.log("Update Phase");
   }, [count]);
+
   return (
     <div>
       <h1>Counter1: {count}</h1>
