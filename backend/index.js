@@ -6,11 +6,10 @@ const cors = require("cors");
 
 const app = express();
 app.use(express.json());
-app.use(cors);
-
-port = 3001;
+app.use(cors());
 
 const DB_URI = "mongodb://127.0.0.1:27017/twitterClone";
+const port = 3000;
 
 mongoose.connect(DB_URI);
 
@@ -24,26 +23,44 @@ app.get("/", async (req, res) => {
   console.log("Hello");
   res.json("hhhh");
 });
-app.post("/register", async (req, res) => {
+
+// Middleware for token verification
+function verifyToken(req, res, next) {
+  const token = req.headers["authorization"];
+  if (!token)
+    return res.status(403).send("A token is required for authentication");
   try {
-    const hashedPass = bcrypt.hashSync(User.req.password, 8);
+    req.user = jwt.verify(token.split(" ")[1], process.env.SECRET_KEY);
+    next();
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
+}
+
+// Registration user
+app.post("/registration", async (req, res) => {
+  try {
+    const hashedPassword = bcrypt.hashSync(req.body.password, 8);
     const user = new User({
       username: req.body.username,
-      password: hashedPass,
+      password: hashedPassword,
     });
-
     await user.save();
-    res.status(201).send("User Successfully registered");
-  } catch {
-    res.status(500).send("Internal Server Error");
+    res.status(201).send("User Registration successfull");
+  } catch (error) {
+    res.status(500).send("Error Registration user");
   }
 });
 
+// Login user
 app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      return res.status(401).send("Invalid credentials");
+    }
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
-      const token = jwt.sign({ userId: user._id }, "YOUR_SECRET_KEY");
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
       res.json({ token });
     } else {
       res.status(401).send("Invalid credentials");
@@ -54,25 +71,29 @@ app.post("/login", async (req, res) => {
 });
 
 const PostSchema = new mongoose.Schema({
-  usetId: mongoose.Schema.Types.ObjectId,
+  userId: mongoose.Schema.Types.ObjectId,
   title: String,
-  const: String,
+  content: String, // Fixed typo here
 });
 
 const Post = mongoose.model("Post", PostSchema);
 
-function verifyToken(req, res, next) {
-  const token = req.headers["authorization"];
-  if (!token)
-    return res.status(403).send("A token is required for authentication");
+// Create a post
+app.post("/posts", verifyToken, async (req, res) => {
   try {
-    req.user = jwt.verify(token.split(" ")[1], "YOUR_SECRET_KEY"); // Split to remove 'Bearer'
-    next();
-  } catch (err) {
-    return res.status(401).send("Invalid Token");
+    const post = new Post({
+      userId: req.user.userId,
+      title: req.body.title,
+      content: req.body.content,
+    });
+    await post.save();
+    res.status(201).send("Post created successfully");
+  } catch (error) {
+    res.status(500).send("Error creating post");
   }
-}
+});
 
+// Get all posts
 app.get("/posts", verifyToken, async (req, res) => {
   try {
     const posts = await Post.find();
@@ -82,15 +103,20 @@ app.get("/posts", verifyToken, async (req, res) => {
   }
 });
 
+// Fetch a single post
 app.get("/posts/:postId", verifyToken, async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send("Post not found");
+    }
     res.json(post);
   } catch (error) {
-    return res.status(404).send("Post not found");
+    res.status(500).send("Error fetching post");
   }
 });
 
+// Update a post
 app.put("/posts/:postId", verifyToken, async (req, res) => {
   try {
     const post = await Post.findOne({
@@ -107,6 +133,7 @@ app.put("/posts/:postId", verifyToken, async (req, res) => {
   }
 });
 
+// Delete a post
 app.delete("/posts/:postId", verifyToken, async (req, res) => {
   try {
     const result = await Post.findOneAndDelete({
@@ -123,5 +150,5 @@ app.delete("/posts/:postId", verifyToken, async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Using port number ${port}`);
+  console.log(`Server is running on ${port}`);
 });
