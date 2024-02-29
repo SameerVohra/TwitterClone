@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Registration() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleUsername = (event) => {
@@ -12,12 +14,16 @@ export default function Registration() {
     setPassword(event.target.value);
   };
   const handleFormData = async (event) => {
-    event.preventDefault();
-    const response = await axios.post("http://localhost:3000/registration", {
-      username: username,
-      password: password,
-    });
-    console.log(response);
+    try {
+      event.preventDefault();
+      const response = await axios.post("http://localhost:3000/registration", {
+        username: username,
+        password: password,
+      });
+      if (response.status == 201) {
+        navigate("/login");
+      }
+    } catch (error) {}
   };
   return (
     <div>

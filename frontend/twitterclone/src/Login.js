@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,13 +15,14 @@ export default function Login() {
     setPassword(event.target.value);
   };
 
-  const handleFormData = (event) => {
-    event.preventDefault();
-    if (username === "bharat" && password === "bharat123") {
-      navigate("/posts");
-    } else {
-      setLoginErr("Invalid username or password");
-    }
+  const handleFormData = async (e) => {
+    try {
+      e.preventDefault();
+      await axios.post("http://localhost:3000/login", {
+        username: username,
+        password: password,
+      });
+    } catch (error) {}
   };
   return (
     <div>

@@ -30,7 +30,7 @@ function verifyToken(req, res, next) {
   if (!token)
     return res.status(403).send("A token is required for authentication");
   try {
-    req.user = jwt.verify(token.split(" ")[1], process.env.SECRET_KEY);
+    req.user = jwt.verify(token.split(" ")[1], "YOUR_SECRET_KEY");
     next();
   } catch (err) {
     return res.status(401).send("Invalid Token");
@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).send("Invalid credentials");
     }
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ userId: user._id }, "YOUR_SECRET_KEY");
       res.json({ token });
     } else {
       res.status(401).send("Invalid credentials");
