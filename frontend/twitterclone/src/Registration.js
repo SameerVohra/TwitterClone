@@ -20,7 +20,7 @@ export default function Registration() {
         username: username,
         password: password,
       });
-      if (response.status == 201) {
+      if (response.status === 201) {
         navigate("/login");
       }
     } catch (error) {}

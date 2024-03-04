@@ -18,10 +18,14 @@ export default function Login() {
   const handleFormData = async (e) => {
     try {
       e.preventDefault();
-      await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("http://localhost:3000/login", {
         username: username,
         password: password,
       });
+      if (response.status == 200) {
+        localStorage.setItem("jwtToken", response.data.token);
+        navigate("/posts");
+      }
     } catch (error) {}
   };
   return (

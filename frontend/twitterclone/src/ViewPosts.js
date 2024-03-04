@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom"; // Added useNavigate
+
 export default function ViewPosts() {
   const [apiData, setApiData] = useState([]);
-  const [loading, isLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Changed isLoading to setLoading
   const [apiError, setApiError] = useState(false);
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts",
-        );
+  const navigate = useNavigate(); // Added useNavigate
 
-        console.log(response.data);
-        setApiData(response.data);
-        console.log(apiData);
-        isLoading(false);
-      } catch (error) {
-        setApiError(true);
-      }
-    })();
+  useEffect(() => {
+    if (localStorage.getItem("jwtToken")) {
+      (async () => {
+        try {
+          const response = await axios.get("http://localhost:3000/posts", {
+            headers: {
+              authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+          });
+          setApiData(response.data);
+          setLoading(false);
+        } catch (error) {
+          setApiError(true);
+        }
+      })();
+    } else {
+      navigate("/login"); // Used useNavigate to navigate to login page
+    }
   }, []);
   if (apiError) return <h1>Something went wrong</h1>;
   if (loading) return <h1>LOADING.................</h1>;
