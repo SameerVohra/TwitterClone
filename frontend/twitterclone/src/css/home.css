@@ -1,0 +1,39 @@
+body {
+  background-color: #3f3f3f;
+}
+#navbar {
+  border: 1px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-radius: 40px;
+  box-shadow: 5px 5px 5px black;
+  transition: 300ms ease-in-out;
+}
+
+h1 {
+  color: cyan;
+}
+
+#links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+#Link {
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+  transition: 500ms ease-in-out;
+}
+
+#Link:hover {
+  color: cyan;
+}
+
+#navbar:hover {
+  background-color: #383838;
+}

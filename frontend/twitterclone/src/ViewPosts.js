@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom"; // Added useNavigate
-
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import "./css/posts.css";
 export default function ViewPosts() {
   const [apiData, setApiData] = useState([]);
-  const [loading, setLoading] = useState(true); // Changed isLoading to setLoading
+  const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
-  const navigate = useNavigate(); // Added useNavigate
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("jwtToken")) {
       (async () => {
@@ -24,16 +23,58 @@ export default function ViewPosts() {
         }
       })();
     } else {
-      navigate("/login"); // Used useNavigate to navigate to login page
+      navigate("/login");
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    navigate("/login");
+  };
+
+  const handleDelete = async (postId) => {
+    try {
+      await axios.delete(`http://localhost:3000/posts/${postId}`, {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("jwtToken"),
+        },
+      });
+      setApiData(apiData.filter((post) => post.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
   if (apiError) return <h1>Something went wrong</h1>;
   if (loading) return <h1>LOADING.................</h1>;
-  const result = apiData.map((data) => <h1 key={data.id}>{data.title}</h1>);
-
+  const result = apiData.map((data) => (
+    <div id="posts">
+      <h1>{data.title}</h1>
+      <h4>{data.content}</h4>
+    </div>
+  ));
   return (
     <div>
-      <h1>POSTS:-</h1>
+      <div id="navbar">
+        <div id="logo">
+          <h1>TWITTER</h1>
+        </div>
+
+        <div id="links">
+          {" "}
+          <Link id="Link" to="/">
+            Home
+          </Link>
+          <Link id="Link" to="/contact">
+            Contact
+          </Link>
+          <Link id="Link" to="/about">
+            About
+          </Link>
+          <Link id="Link" onClick={handleLogout}>
+            Logout
+          </Link>
+        </div>
+      </div>
       {result}
     </div>
   );
