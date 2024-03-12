@@ -19,6 +19,14 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", UserSchema);
 
+const contactSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  query: String,
+});
+
+const Query = mongoose.model("Query", contactSchema);
+
 app.get("/", async (req, res) => {
   console.log("Hello");
   res.json("hhhh");
@@ -146,6 +154,21 @@ app.delete("/posts/:postId", verifyToken, async (req, res) => {
     res.status(200).send("Post deleted successfully");
   } catch (error) {
     res.status(500).send("Error deleting post");
+  }
+});
+
+app.post("/contact", async (req, res) => {
+  console.log("/contact called");
+  try {
+    const query = new Query({
+      name: req.body.name,
+      email: req.body.email,
+      query: req.body.query,
+    });
+    await query.save();
+    res.status(201).send("Successful");
+  } catch (error) {
+    res.status(500).send("Internal server error");
   }
 });
 

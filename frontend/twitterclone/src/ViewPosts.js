@@ -6,6 +6,7 @@ export default function ViewPosts() {
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("jwtToken")) {
@@ -29,29 +30,36 @@ export default function ViewPosts() {
 
   const handleLogout = () => {
     localStorage.removeItem("jwtToken");
+    console.log("LOGGED OUT");
     navigate("/login");
   };
 
-  const handleDelete = async (postId) => {
+  const handleDeletePost = async (postId) => {
     try {
       await axios.delete(`http://localhost:3000/posts/${postId}`, {
         headers: {
           authorization: "Bearer " + localStorage.getItem("jwtToken"),
         },
       });
-      setApiData(apiData.filter((post) => post.id !== postId));
+      const response = await axios.get("http://localhost:3000/posts", {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("jwtToken"),
+        },
+      });
+      setApiData(response.data);
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
-  if (apiError) return <h1>Something went wrong</h1>;
-  if (loading) return <h1>LOADING.................</h1>;
   const result = apiData.map((data) => (
     <div id="posts">
       <h1>{data.title}</h1>
       <h4>{data.content}</h4>
     </div>
   ));
+
+  if (apiError) return <h1>Something went wrong</h1>;
+  if (loading) return <h1>LOADING.................</h1>;
   return (
     <div>
       <div id="navbar">
@@ -75,7 +83,8 @@ export default function ViewPosts() {
           </Link>
         </div>
       </div>
-      {result}
+
+      <div id="res">{result}</div>
     </div>
   );
 }

@@ -35,33 +35,23 @@
   background-color: #383838;
 }
 
-#posts {
-  border: 1px solid white;
-  margin: 10px;
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-  transition: 500ms ease-in-out;
-}
-
-#posts:hover {
-  box-shadow: 5px 5px 10px white;
-}
-
-#posts h1 {
-  color: white;
-}
-
-#posts h4 {
-  color: wheat;
-  font-size: 20px;
-}
-
-#res {
-  margin-top: 30px;
-  border: 1px solid white;
+#formSubmission {
+  padding: 30px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+button {
+  padding: 10px;
+  width: 200px;
+  background-color: cyan;
+  transition: 300ms ease-in-out;
+}
+
+button:hover {
+  background-color: blue;
+  box-shadow: 10px 10px 20px black;
 }
