@@ -27,11 +27,6 @@ const contactSchema = new mongoose.Schema({
 
 const Query = mongoose.model("Query", contactSchema);
 
-app.get("/", async (req, res) => {
-  console.log("Hello");
-  res.json("hhhh");
-});
-
 // Middleware for token verification
 function verifyToken(req, res, next) {
   const token = req.headers["authorization"];
@@ -81,13 +76,13 @@ app.post("/login", async (req, res) => {
 const PostSchema = new mongoose.Schema({
   userId: mongoose.Schema.Types.ObjectId,
   title: String,
-  content: String, // Fixed typo here
+  content: String,
 });
-
 const Post = mongoose.model("Post", PostSchema);
 
 // Create a post
-app.post("/posts", verifyToken, async (req, res) => {
+
+app.post("/createposts", verifyToken, async (req, res) => {
   try {
     const post = new Post({
       userId: req.user.userId,

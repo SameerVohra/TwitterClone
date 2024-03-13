@@ -1,0 +1,9 @@
+#formBox {
+  border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  margin: 10px;
+}

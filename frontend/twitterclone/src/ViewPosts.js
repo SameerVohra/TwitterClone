@@ -72,6 +72,9 @@ export default function ViewPosts() {
           <Link id="Link" to="/">
             Home
           </Link>
+          <Link id="Link" to="/createposts">
+            Create a post
+          </Link>
           <Link id="Link" to="/contact">
             Contact
           </Link>

@@ -6,10 +6,9 @@ import About from "./About.js";
 import Contact from "./Contact.js";
 import Posts from "./Posts";
 import Login from "./Login.js";
-import Counter from "./Counter";
 import ViewPosts from "./ViewPosts.js";
 import Registration from "./Registration.js";
-import axios from "axios";
+import Createposts from "./Createposts.js";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -43,13 +42,13 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/counter",
-    element: <Counter></Counter>,
+    path: "/registration",
+    element: <Registration></Registration>,
   },
 
   {
-    path: "/registration",
-    element: <Registration></Registration>,
+    path: "createposts",
+    element: <Createposts></Createposts>,
   },
 ]);
 

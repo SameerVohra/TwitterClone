@@ -24,7 +24,7 @@ export default function Login() {
         username: username,
         password: password,
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         localStorage.setItem("jwtToken", response.data.token);
         console.log(response.data.token);
         navigate("/posts");

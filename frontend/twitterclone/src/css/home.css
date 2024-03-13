@@ -37,3 +37,7 @@ h1 {
 #navbar:hover {
   background-color: #383838;
 }
+
+h1 {
+  text-align: center;
+}

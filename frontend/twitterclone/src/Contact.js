@@ -63,9 +63,6 @@ export default function Contact() {
           <Link id="Link" to="/about">
             About
           </Link>
-          <Link id="Link" to="/login">
-            Login/SignUp
-          </Link>
         </div>
       </div>
 
